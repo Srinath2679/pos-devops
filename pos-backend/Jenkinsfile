@@ -12,7 +12,7 @@ pipeline {
             steps {
 
                 git branch: 'main',
-                credentialsId: 'Github-Credentials',
+                credentialsId: 'Git-Credentials',
                 url: 'https://github.com/Srinath2679/Billing-Software.git'
             }
         }
