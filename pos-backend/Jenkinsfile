@@ -6,11 +6,8 @@ pipeline {
         maven 'Maven'
     }
 
-    options {
-        skipDefaultCheckout(true)
-    }
-
     environment {
+        APP_REPO = 'https://github.com/Srinath2679/Billing-Software.git'
         IMAGE_NAME = 'billing-software'
         CONTAINER_NAME = 'billing-container'
     }
@@ -23,29 +20,38 @@ pipeline {
             }
         }
 
-        stage('Checkout Code') {
+        stage('Checkout App Code') {
             steps {
-                git branch: 'main',
-                    credentialsId: 'Git-Credentials',
-                    url: 'https://github.com/Srinath2679/Billing-Software.git'
+                dir('app') {
+                    git branch: 'main',
+                        credentialsId: 'Git-Credentials',
+                        url: "${APP_REPO}"
+                }
             }
         }
 
         stage('Build Jar') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                dir('app') {
+                    sh 'mvn clean package -DskipTests'
+                }
             }
         }
 
-        stage('Copy Dockerfile') {
+        stage('Prepare Docker Context') {
             steps {
-                sh 'cp Dockerfile .'
+                sh '''
+                    cp app/Dockerfile app/ || true
+                    ls -la app
+                '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                dir('app') {
+                    sh 'docker build -t $IMAGE_NAME .'
+                }
             }
         }
 
