@@ -6,6 +6,10 @@ pipeline {
         maven 'Maven'
     }
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     environment {
         APP_REPO = 'https://github.com/Srinath2679/Billing-Software.git'
         IMAGE_NAME = 'billing-software'
@@ -13,6 +17,12 @@ pipeline {
     }
 
     stages {
+
+        stage('Checkout DevOps Repo') {
+            steps {
+                checkout scm
+            }
+        }
 
         stage('Clean Workspace') {
             steps {
@@ -40,10 +50,7 @@ pipeline {
 
         stage('Prepare Docker Context') {
             steps {
-                sh '''
-                    cp app/Dockerfile app/ || true
-                    ls -la app
-                '''
+                sh 'ls -la app'
             }
         }
 
