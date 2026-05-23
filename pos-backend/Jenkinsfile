@@ -1,0 +1,31 @@
+pipeline {
+
+    agent any
+
+    tools {
+        maven 'Maven'
+    }
+
+    stages {
+
+        stage('Clone App Repo') {
+            steps {
+
+                git branch: 'main',
+                url: 'https://github.com/Srinath2679/Billing-Software.git'
+            }
+        }
+
+        stage('Build Jar') {
+            steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Verify Build') {
+            steps {
+                sh 'ls -ltr target'
+            }
+        }
+    }
+}
