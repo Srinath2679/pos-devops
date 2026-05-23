@@ -13,7 +13,15 @@ pipeline {
 
     stages {
 
-        stage('Clone App Repo') {
+        stage('Clean Workspace') {
+
+            steps {
+
+                sh 'rm -rf app || true'
+            }
+        }
+
+        stage('Clone Application Repo') {
 
             steps {
 
